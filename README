@@ -1,0 +1,6 @@
+DTLS implementation for Contiki OS currently supports only TLS_WITH_PSK_AES_128_CCM_8 cipher suite described in draft-mcgrew-tls-aes-ccm-04
+
+Information on how to install the library is presented in the Wiki section.
+
+dtls folder contains the source code of the library
+test-dtls folder contains an example client-server programs that use DTLS for communication
