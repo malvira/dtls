@@ -28,10 +28,10 @@
  * SUCH DAMAGE.
  *
  */
+#include <string.h>
 #include "util.h"
 #include "dtls.h"
 #include "random.h"
-#include "ntpd.h"
 #include "hmac_sha2.h"
 
 char* add_record_header(char* buffer, uint8_t type, uint64 seq_num, uint16_t epoch, uint16_t length){
@@ -84,26 +84,13 @@ void create_helloverify_request(char* buffer, unsigned char* cookie, unsigned lo
 }
 void create_server_hello(char* buffer, char* random, uint64 seq_num, uint16_t epoch, uint16_t msn) {
 	char* ptr = add_record_header(buffer, handshake, seq_num, epoch, 50);
+	uint8_t i;
 	ptr = add_message_header(ptr, server_hello, msn, 38);
 	*ptr = (char) (VERSION_MAJOR & 0xFF);	ptr++;
 	*ptr = (char) (VERSION_MINOR & 0xFF);	ptr++;
-	uint8_t i;
-	if (random==NULL){
-		unsigned long current_time = getCurrTime();
-		*ptr = (char) ((current_time >> 24) & 0xFF);	ptr++;
-		*ptr = (char) ((current_time >> 16) & 0xFF);	ptr++;
-		*ptr = (char) ((current_time >> 8) & 0xFF);	ptr++;
-		*ptr = (char) ((current_time) & 0xFF);	ptr++;
-		random_init(clock_time());
-		for (i = 0; i < 28; i++) {
-			*ptr = (char) (random_rand() % 128 & 0xFF);
-			ptr++;
-		}
-	} else {
-		for (i = 0; i < 32; i++){
-			*ptr = random[i];
-			ptr++;
-		}
+	for (i = 0; i < 32; i++){
+	  *ptr = random[i];
+	  ptr++;
 	}
 	*ptr = 0x00;	ptr++; //session id is null so the length is 0
 	*ptr = (char) ((TLS_PSK_WITH_AES_128_CCM_8 >> 8) & 0xFF);	ptr++;
@@ -123,30 +110,19 @@ void create_next_server_hello(char* buffer, char* random, uint64 seq_num, uint16
 }
 
 void create_client_hello(char* buffer, char* random, char* cookie, uint8_t cookie_len, uint64 seq_num, uint16_t epoch, uint16_t message_seq) {
+	uint8_t i;
 	char* ptr = add_record_header(buffer, handshake, seq_num, epoch, 54+cookie_len);
+
 	ptr = add_message_header(ptr, client_hello, message_seq, 42+cookie_len );
 
 	*ptr = (char) (VERSION_MAJOR & 0xFF);	ptr++;
 	*ptr = (char) (VERSION_MINOR & 0xFF);	ptr++;
-	uint8_t i;
-	if (random==NULL){
-		unsigned long current_time = getCurrTime();
-		*ptr = (char) ((current_time >> 24) & 0xFF);	ptr++;
-		*ptr = (char) ((current_time >> 16) & 0xFF);	ptr++;
-		*ptr = (char) ((current_time >> 8) & 0xFF);	ptr++;
-		*ptr = (char) ((current_time) & 0xFF);	ptr++;
 
-		random_init(clock_time());
-		for (i = 0; i < 28; i++) {
-			*ptr = (char) (random_rand() % 128 & 0xFF);
-			ptr++;
-		}
-	} else {
-		for (i = 0; i < 32; i++) {
-			*ptr = random[i];
-			ptr++;
-		}
+	for (i = 0; i < 32; i++) {
+	  *ptr = random[i];
+	  ptr++;
 	}
+
 	*ptr = 0x00;	ptr++; //session id is null so the length is 0
 	//cookie goes here
 	*ptr = (char) (cookie_len & 0xFF); ptr++;

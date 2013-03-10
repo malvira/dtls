@@ -29,7 +29,6 @@
  *
  */
 #include "dtls.h"
-#include "ntpd.h"
 #include "random.h"
 #include "hmac_sha2.h"
 #include "aes_ccm.h"
@@ -42,6 +41,12 @@
 #endif
 #include "net/uip-debug.h"
 #endif
+
+process_event_t dtls_event;
+char* dtls_appdata;
+int dtls_applen;
+uint8_t dtls_flags;
+
 /***************************************************************/
 /*                     Static variables                        */
 /***************************************************************/

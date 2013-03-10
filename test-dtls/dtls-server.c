@@ -32,7 +32,7 @@
 #include <contiki.h>
 #include <contiki-net.h>
 #include <contiki-lib.h>
-#include <net/dtls/dtls.h>
+#include <dtls.h>
 
 
 PROCESS(dtls_server_test_process, "DTLS server");

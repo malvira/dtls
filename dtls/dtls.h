@@ -108,7 +108,7 @@ typedef struct Data {
 	uint16_t port;
 } Data;
 
-uint8_t dtls_flags;
+extern uint8_t dtls_flags;
 
 #define dtls_connected() (dtls_flags & DTLS_CONNECTED)
 #define dtls_newdata() (dtls_flags & DTLS_NEWDATA)
@@ -141,9 +141,9 @@ int DTLS_Write(Connection* conn, char* toWrite, int length);
  */
 void DTLS_Close(Connection* conn);
 
-process_event_t dtls_event;
-char* dtls_appdata;
-int dtls_applen;
+extern process_event_t dtls_event;
+extern char* dtls_appdata;
+extern int dtls_applen;
 PROCESS_NAME(dtls_client_handshake_process);
 PROCESS_NAME(dtls_server_listen);
 

@@ -32,7 +32,7 @@
 #include <contiki.h>
 #include <contiki-net.h>
 #include <contiki-lib.h>
-#include <net/dtls/dtls.h>
+#include <dtls.h>
 #include <string.h>
 #include "lib/mmem.h"
 #define SEND_INTERVAL 1 * CLOCK_CONF_SECOND
